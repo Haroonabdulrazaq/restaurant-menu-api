@@ -1,5 +1,7 @@
 import express from 'express';
+import userRouter from './routes/userRoute';
 import { PrismaClient } from '@prisma/client';
+import menuRouter from './routes/menuRoute';
 
 const prisma = new PrismaClient();
 const app = express();
@@ -15,9 +17,8 @@ async function checkDatabaseConnection() {
   }
 }
 
-app.get('/api', (req, res) => {
-  res.send('Hello World, API for restaurant menu');
-});
+app.use('/api', userRouter);
+app.use('/api', menuRouter);
 
 async function startServer() {
   await checkDatabaseConnection();
