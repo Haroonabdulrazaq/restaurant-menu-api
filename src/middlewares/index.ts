@@ -18,7 +18,8 @@ export const authenticateUser = async (
   res: Response,
   next: NextFunction
 ) => {
-  const token = req.headers.authorization?.split(' ')[1];
+  console.log(req.headers);
+  const token = req.headers.authorization;
   if (!token) {
     return res.status(401).json({ error: 'Authentication required' });
   }
@@ -27,6 +28,7 @@ export const authenticateUser = async (
       token,
       process.env.JWT_SECRET as string
     ) as JwtPayload;
+    console.log(decoded);
     req.user = decoded;
     next();
   } catch (error) {

@@ -21,8 +21,9 @@ model MenuItem {
   calories     Int
   price        Float
   restaurant   Restaurant @relation(fields: [restaurantId], references: [id])
-  restaurantId Int
-  orders       Order[]
+  restaurantId Int        @default(1)
+  order     Order    @relation(fields: [orderId], references: [id])
+  orderId   Int      @default(1)
 }
 
 model User {
@@ -37,8 +38,7 @@ model Order {
   userId       Int
   user         User     @relation(fields: [userId], references: [id])
   restaurantId Int
-  menuItemId   Int
-  menuItem     MenuItem     @relation(fields: [menuItemId], references: [id])
+  menuItems    MenuItem[]
   totalPrice   Float
   createdAt    DateTime @default(now())
 }
@@ -47,5 +47,5 @@ model Restaurant {
   id        Int        @id @default(autoincrement())
   name      String
   location  String
-  menuItems MenuItem[] // Relation to MenuItem
+  menuItems MenuItem[]
 }

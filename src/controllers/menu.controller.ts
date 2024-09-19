@@ -8,7 +8,7 @@ export const getRestaurantMenu = async (req: Request, res: Response) => {
     const { restaurantId } = req.params;
     const menu = await prisma.menuItem.findMany({
       where: {
-        restaurantId: parseInt(restaurantId),
+        restaurantId: Number(restaurantId),
       },
     });
 
