@@ -2,6 +2,7 @@ import express from 'express';
 import userRouter from './routes/userRoute';
 import { PrismaClient } from '@prisma/client';
 import menuRouter from './routes/menuRoute';
+import orderRouter from './routes/orderRoute';
 
 const prisma = new PrismaClient();
 const app = express();
@@ -13,12 +14,13 @@ async function checkDatabaseConnection() {
     console.log('Successfully connected to the database');
   } catch (error) {
     console.error('Unable to connect to the database:', error);
-    process.exit(1);
+    return;
   }
 }
 
 app.use('/api', userRouter);
 app.use('/api', menuRouter);
+app.use('/api', orderRouter);
 
 async function startServer() {
   await checkDatabaseConnection();

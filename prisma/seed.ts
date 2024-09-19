@@ -19,53 +19,6 @@ async function main() {
     },
   });
 
-  // Create menu items
-  const menuItem1 = await prisma.menuItem.create({
-    data: {
-      name: 'Margherita Pizza',
-      description: 'Classic pizza with tomato, mozzarella, and basil',
-      ingredients: ['Dough', 'Tomato Sauce', 'Mozzarella', 'Basil'],
-      calories: 800,
-      price: 1299,
-      restaurantId: restaurant1.id,
-    },
-  });
-  const menuItem2 = await prisma.menuItem.create({
-    data: {
-      name: 'Caesar Salad',
-      description: 'Fresh romaine lettuce with Caesar dressing and croutons',
-      ingredients: [
-        'Romaine Lettuce',
-        'Caesar Dressing',
-        'Croutons',
-        'Parmesan',
-      ],
-      calories: 350,
-      price: 899,
-      restaurantId: restaurant1.id,
-    },
-  });
-  const menuItem3 = await prisma.menuItem.create({
-    data: {
-      name: 'Sushi Platter',
-      description: 'Assorted sushi rolls with soy sauce and wasabi',
-      ingredients: ['Rice', 'Nori', 'Fish', 'Vegetables'],
-      calories: 600,
-      price: 2499,
-      restaurantId: restaurant2.id,
-    },
-  });
-  const menuItem4 = await prisma.menuItem.create({
-    data: {
-      name: 'Vegetarian Stir Fry',
-      description: 'Mixed vegetables stir-fried in a savory sauce',
-      ingredients: ['Tofu', 'Mixed Vegetables', 'Soy Sauce', 'Garlic'],
-      calories: 450,
-      price: 1499,
-      restaurantId: restaurant2.id,
-    },
-  });
-
   // Create users
   const user1 = await prisma.user.create({
     data: {
@@ -82,17 +35,64 @@ async function main() {
   });
 
   // Create orders
-  await prisma.order.createMany({
+  const order1 = await prisma.order.create({
+    data: {
+      userId: user1.id,
+      restaurantId: restaurant1.id,
+      totalPrice: 1299,
+    },
+  });
+  const order2 = await prisma.order.create({
+    data: {
+      userId: user2.id,
+      restaurantId: restaurant2.id,
+      totalPrice: 2499,
+    },
+  });
+
+  // Create menu items
+  await prisma.menuItem.createMany({
     data: [
       {
-        userId: user1.id,
+        name: 'Margherita Pizza',
+        description: 'Classic pizza with tomato, mozzarella, and basil',
+        ingredients: ['Dough', 'Tomato Sauce', 'Mozzarella', 'Basil'],
+        calories: 800,
+        price: 1299,
         restaurantId: restaurant1.id,
-        totalPrice: 1299,
+        orderId: order1.id,
       },
       {
-        userId: user2.id,
+        name: 'Caesar Salad',
+        description: 'Fresh romaine lettuce with Caesar dressing and croutons',
+        ingredients: [
+          'Romaine Lettuce',
+          'Caesar Dressing',
+          'Croutons',
+          'Parmesan',
+        ],
+        calories: 350,
+        price: 899,
+        restaurantId: restaurant1.id,
+        orderId: order1.id,
+      },
+      {
+        name: 'Sushi Platter',
+        description: 'Assorted sushi rolls with soy sauce and wasabi',
+        ingredients: ['Rice', 'Nori', 'Fish', 'Vegetables'],
+        calories: 600,
+        price: 2499,
         restaurantId: restaurant2.id,
-        totalPrice: 2499,
+        orderId: order2.id,
+      },
+      {
+        name: 'Vegetarian Stir Fry',
+        description: 'Mixed vegetables stir-fried in a savory sauce',
+        ingredients: ['Tofu', 'Mixed Vegetables', 'Soy Sauce', 'Garlic'],
+        calories: 450,
+        price: 1499,
+        restaurantId: restaurant2.id,
+        orderId: order2.id,
       },
     ],
   });
