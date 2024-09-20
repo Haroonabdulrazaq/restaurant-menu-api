@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { body, validationResult } from 'express-validator';
 
-// User validation schema
 export const userValidationSchema = [
   body('username')
     .notEmpty()
@@ -23,7 +22,6 @@ export const userValidationSchema = [
     ),
 ];
 
-// Order validation schema
 export const orderValidationSchema = [
   body('restaurantId')
     .isInt({ min: 1 })
