@@ -9,11 +9,6 @@ export const submitOrder = async (req: Request, res: Response) => {
     const { restaurantId, menuItemIds, totalPrice } = req.body;
     const userId = (req as any).user.userId;
 
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-
     const existingMenuItems = await prisma.menuItem.findMany({
       where: {
         id: { in: menuItemIds },
