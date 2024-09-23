@@ -25,7 +25,7 @@ export function QRCodeScanner({ onScan }) {
 
   if (hasPermission === null) {
     return (
-      <View style={styles.container}>
+      <View style={styles.textContainer}>
         <Text style={[styles.text, { color: textColor }]}>
           Requesting for camera permission
         </Text>
@@ -34,7 +34,7 @@ export function QRCodeScanner({ onScan }) {
   }
   if (hasPermission === false) {
     return (
-      <View style={styles.container}>
+      <View style={styles.textContainer}>
         <Text style={[styles.text, { color: textColor }]}>
           No access to camera
         </Text>
@@ -61,6 +61,11 @@ const styles = StyleSheet.create({
     borderColor: 'green',
     width: '100%',
     height: '100%',
+  },
+  textContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   text: {
     fontSize: 18,

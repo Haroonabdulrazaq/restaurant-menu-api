@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import {
   StyleSheet,
   Text,
@@ -8,6 +7,7 @@ import {
   TouchableOpacity,
   Modal,
   Pressable,
+  ActivityIndicator,
 } from 'react-native';
 import { convertCentsToDollars, errorLogger } from '../utils';
 import IonIcon from 'react-native-vector-icons/Ionicons';
@@ -20,12 +20,14 @@ export default function Restaurant({ route, navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [restaurantName, setRestaurantName] = useState('');
   const [loading, setLoading] = useState(true);
+  const [isClicked, setIsClicked] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchMenuItems = async () => {
       try {
         const response = await axiosInstance.get(`menu/${restaurantId}`);
+        //TODO: add a check to see if the restaurant is open or If restaurant ID exists
         setMenuItems(response.data);
         setRestaurantName(response.data[0].restaurant.name);
         setLoading(false);
@@ -88,22 +90,41 @@ export default function Restaurant({ route, navigation }) {
     );
   };
   const getTotalPrice = (cart) => {
-    return cart.reduce(
+    const result = cart.reduce(
       (totalPrice, item) => totalPrice + convertCentsToDollars(item.price),
       0
     );
+    return result.toFixed(2);
   };
-  const handleCheckout = () => {
-    console.log('Checkout confirmed', getTotalPrice(cart));
-    setModalVisible(false);
-    setCart([]);
-    navigation.navigate('Checkout', { cart });
+
+  const handleCheckout = async () => {
+    setIsClicked(true);
+    try {
+      const response = await axiosInstance.post('/order', {
+        restaurantId: Number(restaurantId),
+        menuItemIds: cart.map((item) => item.id),
+        totalPrice: getTotalPrice(cart) * 100,
+      });
+
+      if (response.status === 200) {
+        setCart([]);
+        navigation.navigate('Checkout', {
+          message: response.data.message || 'Order placed successfully',
+        });
+        setModalVisible(false);
+      }
+      setIsClicked(false);
+    } catch (error) {
+      errorLogger(error);
+      console.error(error.response.data);
+      setIsClicked(false);
+    }
   };
 
   if (loading) {
     return (
       <View style={styles.container}>
-        <Text style={styles.loadingText}>Loading menu...</Text>
+        <ActivityIndicator size="large" color="#2ecc71" />
       </View>
     );
   }
@@ -123,6 +144,7 @@ export default function Restaurant({ route, navigation }) {
         data={menuItems}
         renderItem={renderMenuItem}
         keyExtractor={(item) => item.id.toString()}
+        ListFooterComponent={<Text style={styles.footer}> </Text>}
       />
       <Pressable
         style={styles.checkoutButton}
@@ -170,7 +192,11 @@ export default function Restaurant({ route, navigation }) {
               style={styles.modalButton}
               onPress={handleCheckout}
             >
-              <Text style={styles.modalButtonText}>Confirm Checkout</Text>
+              {isClicked ? (
+                <ActivityIndicator size="small" color="white" />
+              ) : (
+                <Text style={styles.modalButtonText}>Confirm Checkout</Text>
+              )}
             </TouchableOpacity>
           </View>
         </View>
@@ -328,5 +354,8 @@ const styles = StyleSheet.create({
   closeButtonText: {
     color: 'white',
     fontSize: 18,
+  },
+  footer: {
+    height: 80,
   },
 });

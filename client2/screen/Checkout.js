@@ -1,13 +1,12 @@
 import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 
-const Checkout = ({ navigation }) => {
+const Checkout = ({ route, navigation }) => {
+  const { message } = route.params;
   return (
     <View style={styles.container}>
       <Text style={styles.successText}>Success!</Text>
-      <Text style={styles.successOrderText}>
-        Order has been received by the kitchen
-      </Text>
+      <Text style={styles.successOrderText}>{message}</Text>
       <Text style={styles.homeLink} onPress={() => navigation.navigate('Home')}>
         Go to Home
       </Text>
@@ -29,6 +28,7 @@ const styles = StyleSheet.create({
   },
   successOrderText: {
     fontSize: 16,
+    color: '#333',
   },
   homeLink: {
     marginTop: 20,

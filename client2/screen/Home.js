@@ -33,7 +33,7 @@ export default function Home() {
         <View style={styles.fullScreenImageContainer}>
           <View style={styles.descriptiveContainer}>
             <Text style={styles.descriptiveText}>
-              Scan QR Code to Order our menu
+              Scan QR Code to order our menu
             </Text>
           </View>
           <Image
