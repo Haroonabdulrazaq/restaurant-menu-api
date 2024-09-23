@@ -6,16 +6,17 @@ import {
   View,
   FlatList,
   TouchableOpacity,
-  Button,
+  Modal,
   Pressable,
 } from 'react-native';
 import { convertCentsToDollars, errorLogger } from '../utils';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 
-export default function Restaurant({ route }) {
+export default function Restaurant({ route, navigation }) {
   const { restaurantId } = route.params;
   const [menuItems, setMenuItems] = useState([]);
   const [cart, setCart] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
   const [restaurantName, setRestaurantName] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -61,13 +62,14 @@ export default function Restaurant({ route }) {
     const isInCart = cart.some((cartItem) => cartItem.id === item.id);
     return (
       <TouchableOpacity
-        style={styles.menuItem}
+        style={isInCart ? styles.selectedMenuItem : styles.menuItem}
         onPress={() =>
           isInCart ? removeItemFromCheckout(item) : addItemToCheckout(item)
         }
       >
         <Text style={styles.itemName}>{name}</Text>
         <Text style={styles.itemDescription}>{description}</Text>
+        <Text style={styles.itemIngredients}>Ingredients: </Text>
         <Text style={styles.itemDescription}>{ingredients.join(', ')}</Text>
         <Text style={styles.itemDescription}>{calories} calories</Text>
         <Text style={styles.itemPrice}>${convertCentsToDollars(price)}</Text>
@@ -83,6 +85,28 @@ export default function Restaurant({ route }) {
         </TouchableOpacity>
       </TouchableOpacity>
     );
+  };
+  const renderCartItem = ({ item }) => {
+    return (
+      <View style={styles.cartItem}>
+        <Text style={styles.cartItemName}>{item.name}</Text>
+        <Text style={styles.cartItemPrice}>
+          ${convertCentsToDollars(item.price)}
+        </Text>
+      </View>
+    );
+  };
+  const getTotalPrice = (cart) => {
+    return cart.reduce(
+      (totalPrice, item) => totalPrice + convertCentsToDollars(item.price),
+      0
+    );
+  };
+  const handleCheckout = () => {
+    console.log('Checkout confirmed', getTotalPrice(cart));
+    setModalVisible(false);
+    setCart([]);
+    navigation.navigate('Checkout', { cart });
   };
 
   if (loading) {
@@ -109,9 +133,57 @@ export default function Restaurant({ route }) {
         renderItem={renderMenuItem}
         keyExtractor={(item) => item.id.toString()}
       />
-      <Pressable style={styles.checkoutButton}>
-        <Text style={styles.checkoutButtonText}>Checkout {cart.length}</Text>
+      <Pressable
+        style={styles.checkoutButton}
+        disabled={cart.length === 0}
+        onPress={() => {
+          setModalVisible(true);
+        }}
+      >
+        <Text style={styles.checkoutButtonText}>
+          Checkout{' $'}
+          {getTotalPrice(cart)}
+        </Text>
       </Pressable>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.modalContainer}>
+          <Pressable
+            style={styles.closeButton}
+            onPress={() => setModalVisible(false)}
+          >
+            <Text style={styles.closeButtonText}>
+              <IonIcon name="close" size={24} />
+            </Text>
+          </Pressable>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Summary</Text>
+            <FlatList
+              data={cart}
+              renderItem={({ item }) => (
+                <View>
+                  {renderCartItem({ item })}
+                  <View style={styles.horizontalLine} />
+                </View>
+              )}
+              keyExtractor={(item) => item.id.toString()}
+            />
+            <Text style={styles.modalTotal}>Total: ${getTotalPrice(cart)}</Text>
+            <TouchableOpacity
+              style={styles.modalButton}
+              onPress={handleCheckout}
+            >
+              <Text style={styles.modalButtonText}>Confirm Checkout</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -136,6 +208,14 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     borderRadius: 8,
   },
+  selectedMenuItem: {
+    borderWidth: 0.8,
+    borderColor: '#2ecc71',
+    backgroundColor: 'white',
+    padding: 16,
+    marginBottom: 8,
+    borderRadius: 8,
+  },
   itemName: {
     fontSize: 18,
     fontWeight: 'bold',
@@ -144,6 +224,12 @@ const styles = StyleSheet.create({
   itemDescription: {
     fontSize: 14,
     color: '#666',
+    marginTop: 4,
+  },
+  itemIngredients: {
+    fontSize: 14,
+    color: '#666',
+    fontWeight: 'bold',
     marginTop: 4,
   },
   itemPrice: {
@@ -186,5 +272,70 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     textAlign: 'center',
+  },
+  horizontalLine: {
+    height: 1,
+    width: '100%',
+    backgroundColor: '#ddd',
+    marginVertical: 8,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    maxHeight: '100%',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    width: '80%',
+    maxHeight: '80%',
+  },
+  modalTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+  },
+  cartItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  cartItemName: {
+    fontSize: 18,
+  },
+  modalTotal: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'right',
+    paddingTop: 20,
+  },
+  modalButton: {
+    backgroundColor: '#2ecc71',
+    paddingVertical: 16,
+    borderRadius: 8,
+    marginTop: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  modalButtonText: {
+    color: 'white',
+    fontSize: 18,
+  },
+  closeButton: {
+    padding: 10,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 50,
+    position: 'absolute',
+    top: 5,
+    right: 5,
+  },
+  closeButtonText: {
+    color: 'white',
+    fontSize: 18,
   },
 });

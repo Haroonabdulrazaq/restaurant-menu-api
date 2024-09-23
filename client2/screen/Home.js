@@ -11,6 +11,7 @@ export default function Home() {
   const handleScan = (data) => {
     const restaurantId = data;
     navigation.navigate('Restaurant', { restaurantId: restaurantId });
+    setShowCamera(false);
   };
 
   return (
@@ -21,6 +22,11 @@ export default function Home() {
         </View>
       ) : (
         <View style={styles.fullScreenImageContainer}>
+          <View style={styles.descriptiveContainer}>
+            <Text style={styles.descriptiveText}>
+              Scan QR Code to Order our menu
+            </Text>
+          </View>
           <Image
             source={require('../assets/images/restaurant-background.jpg')}
             style={styles.fullScreenImage}
@@ -32,9 +38,15 @@ export default function Home() {
         style={styles.scanButton}
         onPress={() => setShowCamera(!showCamera)}
       >
-        <Text style={styles.scanButtonText}>
-          Scan QR Code <Ionicons name="scan" size={13} color="white" />
-        </Text>
+        {showCamera ? (
+          <Text style={styles.scanButtonText}>
+            Cancel Scan <Ionicons name="scan" size={13} color="white" />
+          </Text>
+        ) : (
+          <Text style={styles.scanButtonText}>
+            Scan QR Code <Ionicons name="scan" size={13} color="white" />
+          </Text>
+        )}
       </Pressable>
     </View>
   );
@@ -53,14 +65,31 @@ const styles = StyleSheet.create({
   },
   qrCodeScannerContainer: {
     width: '100%',
-    height: '30%',
+    height: '100%',
+  },
+  descriptiveContainer: {
+    position: 'absolute',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    paddingVertical: 40,
+    paddingHorizontal: 10,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#202020',
+    top: 100,
+    alignSelf: 'center',
+    zIndex: 1,
+  },
+  descriptiveText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'white',
   },
   scanButton: {
-    backgroundColor: 'blue',
+    backgroundColor: '#2ecc71',
     padding: 10,
     borderRadius: 5,
     position: 'absolute',
-    bottom: 15,
+    bottom: 200,
   },
   scanButtonText: {
     color: 'white',

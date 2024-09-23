@@ -1,17 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, Button } from 'react-native';
+import { useColorScheme } from 'react-native';
+import { Text, View, StyleSheet } from 'react-native';
 import { Camera, CameraView } from 'expo-camera';
 
 export function QRCodeScanner({ onScan }) {
+  const colorScheme = useColorScheme();
+  const textColor = colorScheme === 'dark' ? 'white' : 'black';
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
-
-  // useEffect(() => {
-  //   (async () => {
-  //     const { status } = await Camera.requestPermissionsAsync();
-  //     setHasPermission(status === 'granted');
-  //   })();
-  // }, []);
 
   useEffect(() => {
     const getCameraPermissions = async () => {
@@ -28,7 +24,11 @@ export function QRCodeScanner({ onScan }) {
   };
 
   if (hasPermission === null) {
-    return <Text style={styles.text}>Requesting for camera permission</Text>;
+    return (
+      <Text style={[styles.text, { color: textColor }]}>
+        Requesting for camera permission
+      </Text>
+    );
   }
   if (hasPermission === false) {
     return <Text style={styles.text}>No access to camera</Text>;
@@ -43,9 +43,6 @@ export function QRCodeScanner({ onScan }) {
         }}
         style={StyleSheet.absoluteFillObject}
       />
-      {scanned && (
-        <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />
-      )}
     </View>
   );
 }
