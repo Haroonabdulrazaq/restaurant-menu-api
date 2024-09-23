@@ -8,6 +8,7 @@ import {
 } from '@react-navigation/drawer';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useColorScheme } from 'react-native';
+import RestaurantScreen from './restaurant';
 
 function CustomDrawerContent(props: DrawerContentComponentProps) {
   return (

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, StyleSheet } from 'react-native';
 import axios from 'axios';
 import { RouteProp } from '@react-navigation/native';
-import { IMenuItem, RootStackParamList } from '../../definition';
+import { IMenuItem, RootStackParamList } from '@/definition';
 import { useRoute } from '@react-navigation/native';
 import { useLocalSearchParams } from 'expo-router';
 
@@ -23,7 +23,6 @@ export default function RestaurantScreen() {
   // let restaurantId = 1;
   useEffect(() => {
     const fetchMenuItems = async () => {
-      return;
       let token =
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImlhdCI6MTcyNjkzMjUxNywiZXhwIjoxNzI2OTM2MTE3fQ.kAiqBWguGUkRJbEvU41UcIkdEqR1Me5Ywn2R1rr7dGA';
       try {

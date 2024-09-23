@@ -55,7 +55,16 @@ function RootLayoutNav() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
         <Stack>
+          <Stack.Screen name="restaurant" options={{ headerShown: false }} />
           <Stack.Screen name="(drawer)" options={{ headerShown: false }} />
+          {/* <Stack.Screen name="restaurant">
+            {(props: any) => <RestaurantScreen {...props} />}
+          </Stack.Screen> */}
+          {/* <Stack.Screen name="restaurant">
+            {({ route, navigation }) => (
+              <RestaurantScreen route={route} navigation={navigation} />
+            )}
+          </Stack.Screen> */}
         </Stack>
       </ThemeProvider>
     </GestureHandlerRootView>

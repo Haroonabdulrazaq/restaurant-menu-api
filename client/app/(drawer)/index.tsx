@@ -2,14 +2,9 @@ import React, { useState } from 'react';
 import { StyleSheet, View, Text, Pressable, Image } from 'react-native';
 import { QRCodeScanner } from '@/components/QRCodeScanner';
 import { useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import Ionicons from '@expo/vector-icons/Ionicons';
-
-type RootStackParamList = {
-  drawer: { screen: 'Restaurant'; params: { restaurantId: string } };
-};
-
-type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
+import { NavigationProp } from '@/definition';
+import { router } from 'expo-router';
 
 export default function Index() {
   const [showCamera, setShowCamera] = useState(false);
@@ -17,11 +12,10 @@ export default function Index() {
 
   const handleScan = (data: string) => {
     const restaurantId = data;
-    console.log('||||||||||--------------||||||||||');
-    console.log('restaurantId', restaurantId);
-    navigation.navigate('drawer', {
-      screen: 'Restaurant',
-      params: { restaurantId },
+    console.log('Index', restaurantId);
+    router.push({
+      pathname: '/restaurant',
+      params: { restaurantId: restaurantId },
     });
   };
 
@@ -40,14 +34,20 @@ export default function Index() {
           />
         </View>
       )}
-      <Pressable
+      {/* <Pressable
         style={styles.scanButton}
         onPress={() => setShowCamera(!showCamera)}
       >
-        <Text style={styles.scanButtonText}>
-          Scan QR Code <Ionicons name="scan" size={13} color="white" />
-        </Text>
-      </Pressable>
+        {showCamera ? (
+          <Text>
+            Cancel Scan <Ionicons name="scan" size={13} color="white" />
+          </Text>
+        ) : (
+          <Text style={styles.scanButtonText}>
+            Scan QR Code <Ionicons name="scan" size={13} color="white" />
+          </Text>
+        )}
+      </Pressable> */}
     </View>
   );
 }
@@ -65,10 +65,10 @@ const styles = StyleSheet.create({
   },
   qrCodeScannerContainer: {
     width: '100%',
-    height: '30%',
+    height: '100%',
   },
   scanButton: {
-    backgroundColor: 'blue',
+    backgroundColor: '#2ecc71',
     padding: 10,
     borderRadius: 5,
     position: 'absolute',
