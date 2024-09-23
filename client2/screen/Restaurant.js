@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { convertCentsToDollars, errorLogger } from '../utils';
 import IonIcon from 'react-native-vector-icons/Ionicons';
+import axiosInstance from '../utils/axiosInstance';
 
 export default function Restaurant({ route, navigation }) {
   const { restaurantId } = route.params;
@@ -26,15 +27,7 @@ export default function Restaurant({ route, navigation }) {
       let token =
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjUsImlhdCI6MTcyNzA4NDY0NCwiZXhwIjoxNzI3MTcxMDQ0fQ.aBMbX6FYMjJF5DsIw8ilzvTSyoZbWpYdEQiAgZSTMxo';
       try {
-        const response = await axios.get(
-          `http://192.168.1.21:3000/api/menu/${restaurantId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
+        const response = await axiosInstance.get(`menu/${restaurantId}`);
         setMenuItems(response.data);
         setRestaurantName(response.data[0].restaurant.name);
         setLoading(false);
