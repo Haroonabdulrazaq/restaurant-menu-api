@@ -1,5 +1,13 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, Pressable, Image } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  Pressable,
+  Image,
+  SafeAreaView,
+  StatusBar,
+} from 'react-native';
 import { QRCodeScanner } from '../components/QRCodeScanner';
 import { useNavigation } from '@react-navigation/native';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -15,7 +23,8 @@ export default function Home() {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
+      <StatusBar hidden={false} backgroundColor="#000" />
       {showCamera ? (
         <View style={styles.qrCodeScannerContainer}>
           <QRCodeScanner onScan={handleScan} />
@@ -48,7 +57,7 @@ export default function Home() {
           </Text>
         )}
       </Pressable>
-    </View>
+    </SafeAreaView>
   );
 }
 

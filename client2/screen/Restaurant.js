@@ -24,8 +24,6 @@ export default function Restaurant({ route, navigation }) {
 
   useEffect(() => {
     const fetchMenuItems = async () => {
-      let token =
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjUsImlhdCI6MTcyNzA4NDY0NCwiZXhwIjoxNzI3MTcxMDQ0fQ.aBMbX6FYMjJF5DsIw8ilzvTSyoZbWpYdEQiAgZSTMxo';
       try {
         const response = await axiosInstance.get(`menu/${restaurantId}`);
         setMenuItems(response.data);
