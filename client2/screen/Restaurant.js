@@ -28,6 +28,11 @@ export default function Restaurant({ route, navigation }) {
       try {
         const response = await axiosInstance.get(`menu/${restaurantId}`);
         //TODO: add a check to see if the restaurant is open or If restaurant ID exists
+        if (response.status === 404) {
+          navigation.navigate('Error', {
+            message: response.data.error,
+          });
+        }
         setMenuItems(response.data);
         setRestaurantName(response.data[0].restaurant.name);
         setLoading(false);
