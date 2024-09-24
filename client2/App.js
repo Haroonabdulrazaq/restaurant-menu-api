@@ -33,7 +33,7 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <MyStack initialRoute={isLoggedIn ? 'Register' : 'Login'} />
+      <MyStack initialRoute={isLoggedIn ? 'Home' : 'Login'} />
     </NavigationContainer>
   );
 }
