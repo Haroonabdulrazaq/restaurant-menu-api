@@ -38,8 +38,8 @@ export const orderValidationSchema = [
   body('totalPrice')
     .notEmpty()
     .withMessage('Total price is required')
-    .isInt()
-    .withMessage('Total price must be an integer'),
+    .isFloat({ min: 0 })
+    .withMessage('Total price must be a positive number'),
 ];
 
 export const validateRequest = (

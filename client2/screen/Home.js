@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
   View,
@@ -7,19 +7,37 @@ import {
   Image,
   SafeAreaView,
   StatusBar,
+  Platform,
 } from 'react-native';
 import { QRCodeScanner } from '../components/QRCodeScanner';
 import { useNavigation } from '@react-navigation/native';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Home() {
   const [showCamera, setShowCamera] = useState(false);
   const navigation = useNavigation();
 
+  useEffect(() => {
+    const checkUserLoggedIn = async () => {
+      const userToken = await AsyncStorage.getItem('userToken');
+      if (!userToken) {
+        navigation.navigate('Login');
+      }
+    };
+
+    checkUserLoggedIn();
+  }, []);
+
   const handleScan = (data) => {
     const restaurantId = data;
     navigation.navigate('Restaurant', { restaurantId: restaurantId });
     setShowCamera(false);
+  };
+
+  const handleLogout = async () => {
+    await AsyncStorage.removeItem('userToken');
+    navigation.navigate('Login');
   };
 
   return (
@@ -56,6 +74,9 @@ export default function Home() {
             Scan QR Code <Ionicons name="scan" size={13} color="white" />
           </Text>
         )}
+      </Pressable>
+      <Pressable style={styles.logoutButton} onPress={handleLogout}>
+        <Text style={styles.logoutButtonText}>Logout</Text>
       </Pressable>
     </SafeAreaView>
   );
@@ -114,5 +135,19 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     objectFit: 'cover',
+  },
+  logoutButton: {
+    backgroundColor: '#e74c3c',
+    padding: 10,
+    borderRadius: 5,
+    position: 'absolute',
+    top: Platform.OS === 'ios' ? 60 : 10,
+    right: 10,
+  },
+  logoutButtonText: {
+    color: 'white',
+    textAlign: 'center',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
