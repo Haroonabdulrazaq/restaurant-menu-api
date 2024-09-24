@@ -5,6 +5,7 @@ import Restaurant from '../screen/Restaurant';
 import Checkout from '../screen/Checkout';
 import Login from '../screen/Login';
 import Register from '../screen/Register';
+import Error from '../screen/Error';
 
 const Stack = createStackNavigator();
 
@@ -32,6 +33,7 @@ function MyStack({ initialRoute }) {
         component={Checkout}
         options={{ headerShown: false }}
       />
+      <Stack.Screen name="Error" component={Error} />
     </Stack.Navigator>
   );
 }
