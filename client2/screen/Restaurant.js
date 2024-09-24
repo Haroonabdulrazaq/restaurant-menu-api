@@ -26,6 +26,13 @@ export default function Restaurant({ route, navigation }) {
   useEffect(() => {
     const fetchMenuItems = async () => {
       try {
+        // For testing purpose, restaurant ID can't be greater than 4
+        if (Number(restaurantId) > 4) {
+          navigation.navigate('Error', {
+            message: 'Restaurant is not registered',
+          });
+          return;
+        }
         const response = await axiosInstance.get(`menu/${restaurantId}`);
         if (response.status === 404) {
           navigation.navigate('Error', {
