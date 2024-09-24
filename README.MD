@@ -1,6 +1,7 @@
 # Application Summary
 
 This application is a full-stack mobile application designed to manage restaurant orders. It includes a client-side interface for users to browse restaurant's menu, register, and place orders, as well as a server-side API to handle the backend logic and database interactions.
+Watch Demo: https://drive.google.com/file/d/1MQmnq3joh51HVN2oGapJ787yYkHUx7Zi/view?usp=drive_link
 
 ### Prerequisites
 
