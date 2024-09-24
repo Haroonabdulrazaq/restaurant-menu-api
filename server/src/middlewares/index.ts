@@ -22,9 +22,12 @@ export const authenticateUser = async (
   if (!token) {
     return res.status(401).json({ error: 'Authentication required' });
   }
+
+  const tokenWithoutBearer = token.split(' ')[1];
+
   try {
     const decoded = jwt.verify(
-      token,
+      tokenWithoutBearer,
       process.env.JWT_SECRET as string
     ) as JwtPayload;
 

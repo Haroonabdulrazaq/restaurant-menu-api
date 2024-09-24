@@ -5,11 +5,13 @@ import {
   orderValidationSchema,
   validateRequest,
 } from '../middlewares/validation';
+import logger from '../middlewares/logger';
 
 const orderRouter = express.Router();
 
 orderRouter.post(
   '/order',
+  logger,
   authenticateUser,
   orderValidationSchema,
   validateRequest,

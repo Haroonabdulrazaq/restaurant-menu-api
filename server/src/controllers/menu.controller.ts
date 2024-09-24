@@ -6,9 +6,21 @@ const prisma = new PrismaClient();
 export const getRestaurantMenu = async (req: Request, res: Response) => {
   try {
     const { restaurantId } = req.params;
+    const restaurant = await prisma.restaurant.findUnique({
+      where: {
+        id: Number(restaurantId),
+      },
+    });
+    if (!restaurant) {
+      res.status(404).json({ error: 'Restaurant not found' });
+      return;
+    }
     const menu = await prisma.menuItem.findMany({
       where: {
         restaurantId: Number(restaurantId),
+      },
+      include: {
+        restaurant: true,
       },
     });
 
