@@ -4,12 +4,18 @@ import Home from '../screen/Home';
 import Restaurant from '../screen/Restaurant';
 import Checkout from '../screen/Checkout';
 import Login from '../screen/Login';
+import Register from '../screen/Register';
 
 const Stack = createStackNavigator();
 
 function MyStack({ initialRoute }) {
   return (
     <Stack.Navigator initialRouteName={initialRoute}>
+      <Stack.Screen
+        name="Register"
+        component={Register}
+        options={{ headerShown: false }}
+      />
       <Stack.Screen
         name="Login"
         component={Login}

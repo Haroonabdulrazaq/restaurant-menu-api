@@ -103,6 +103,15 @@ export default function Login({ navigation }) {
           <Text style={styles.loginButtonText}>Login</Text>
         )}
       </Pressable>
+      <View style={styles.homeLinkContainer}>
+        <Text>Don't have an account?</Text>
+        <Text
+          style={styles.homeLink}
+          onPress={() => navigation.navigate('Register')}
+        >
+          Register.
+        </Text>
+      </View>
     </View>
   );
 }
@@ -150,5 +159,14 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  homeLinkContainer: {
+    width: '100%',
+    marginTop: 10,
+  },
+  homeLink: {
+    fontSize: 12,
+    color: 'blue',
+    textDecorationLine: 'underline',
   },
 });

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ActivityIndicator, StyleSheet } from 'react-native';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MyStack from './navigation/MyStack';
@@ -24,12 +24,16 @@ export default function App() {
   };
 
   if (isLoading) {
-    return <ActivityIndicator size="large" color="#0000ff" />;
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator size="large" color="#2ecc71" />
+      </View>
+    );
   }
 
   return (
     <NavigationContainer>
-      <MyStack initialRoute={isLoggedIn ? 'Home' : 'Login'} />
+      <MyStack initialRoute={isLoggedIn ? 'Register' : 'Login'} />
     </NavigationContainer>
   );
 }
