@@ -102,6 +102,48 @@ Ensure youre in the root of the project and run
 npm run start
 ```
 
+## Connect to the DB
+
+- Create a PSQL DB of your choice preferrably Neon, its free tier is more than enough for this project
+- Update the DATABASE_URL in .env as seen in .env.example with your database connection string, use .env file instead of .env.example
+  ```
+   DATABASE_URL=postgresql://<DBNAME>:<PASSWORD>@<HOST>:<PORT>/<DBNAME>?sslmode=require
+  ```
+- Update the JWT_SECRET in .env as seen in .env.example. It's necessary for authentication.
+  ```
+  JWT_SECRET=<Any text of your choice>
+  ```
+- Run the Prisma migrations:
+  ```bash
+  npx prisma migrate dev
+  ```
+- Seed Data into the DB - The seed data should appear in the DB if setup correctly
+  ```bash
+  npx prisma db seed
+  ```
+- Start the server
+  ```bash
+  npm run dev
+  ```
+  NOTE: If you see "Connection refused" error, ensure your PostgreSQL server is running and the connection details are correct.
+  Go through the set up again, and make sure you have created the DB and updated the DATABASE_URL in .env file.
+  If you see "Successfully connected to the DB, Server running on port 3000" then you are good to go.
+
+## Connect the client to the server
+
+- Make sure you have an expo account and have installed expo cli
+- Create an .env file in client2 directory
+- Update the SERVER_URL in .env file with your server URL
+  ```
+  SERVER_URL=http://localhost:3000
+  ```
+- Run the client
+  ```bash
+  npx expo start
+  ```
+  if you see Metro bundler started, then you are good to go.
+  Start the app on your expo go app on your phone, or any simulator.
+
 ## API Endpoints
 
 ### Authentication
@@ -123,9 +165,16 @@ npm run start
 
 Resturant are pre-seeded into the DB for testing purpose
 
-- USe https://qr.io/
+- Use https://qr.io/
 - Select Text
-- Enter between the range of 1-4, as Id of restaurant are between this range.
+- Scan one of the Images below
+
+| Restaurant Name | QR Code                                      |
+| --------------- | -------------------------------------------- |
+| Tasty Bite      | ![Scan 1](./client2/assets/images/scan1.png) |
+| Gourmet Haven   | ![Scan 2](./client2/assets/images/scan2.png) |
+| Tasty Bite      | ![Scan 3](./client2/assets/images/scan3.png) |
+| Gourmet Haven   | ![Scan 4](./client2/assets/images/scan3.png) |
 
 ## Important Technologies Used
 
